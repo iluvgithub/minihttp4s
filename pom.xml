@@ -1,35 +1,471 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
-    <artifactId>hello-server</artifactId>
-    <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <groupId>com.myway</groupId>
+    <artifactId>func-event-driven</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+
+        <!-- ========================================================= -->
+        <!-- Java / Scala                                               -->
+        <!-- ========================================================= -->
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.compiler.release>17</maven.compiler.release>
+
+        <scala.version>3.3.4</scala.version>
+
+
+        <!-- ========================================================= -->
+        <!-- Libraries                                                  -->
+        <!-- ========================================================= -->
+
+        <cats.version>2.13.0</cats.version>
+        <cats-effect.version>3.7.0</cats-effect.version>
+        <fs2.version>3.12.2</fs2.version>
+
+        <circe.version>0.14.14</circe.version>
+        <kittens.version>3.3.0</kittens.version>
+
+        <redis4cats.version>2.0.5</redis4cats.version>
+
+        <http4s.version>0.23.30</http4s.version>
+
+        <tapir.version>1.11.12</tapir.version>
+
+
+        <!-- ========================================================= -->
+        <!-- Test libraries                                             -->
+        <!-- ========================================================= -->
+
+        <scalatest.version>3.2.19</scalatest.version>
+        <munit-cats-effect.version>2.2.0</munit-cats-effect.version>
+
+
+        <!-- ========================================================= -->
+        <!-- Maven plugins                                               -->
+        <!-- ========================================================= -->
+
+        <scala-maven-plugin.version>4.8.1</scala-maven-plugin.version>
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
+
+        <scalatest-maven-plugin.version>2.2.0</scalatest-maven-plugin.version>
+
+        <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
+
     </properties>
 
+
+    <!-- ============================================================= -->
+    <!-- Dependencies                                                  -->
+    <!-- ============================================================= -->
+
+    <dependencies>
+
+        <!-- ========================================================= -->
+        <!-- Scala 3                                                     -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala3-library_3</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- Cats                                                        -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>cats-core_3</artifactId>
+            <version>${cats.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>cats-free_3</artifactId>
+            <version>${cats.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- Cats Effect                                                 -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>cats-effect_3</artifactId>
+            <version>${cats-effect.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- FS2                                                         -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>co.fs2</groupId>
+            <artifactId>fs2-core_3</artifactId>
+            <version>${fs2.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- Redis4Cats                                                  -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>dev.profunktor</groupId>
+            <artifactId>redis4cats-effects_3</artifactId>
+            <version>${redis4cats.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.profunktor</groupId>
+            <artifactId>redis4cats-log4cats_3</artifactId>
+            <version>1.6.0</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- Kittens                                                     -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>kittens_3</artifactId>
+            <version>${kittens.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- http4s                                                      -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-core_3</artifactId>
+            <version>${http4s.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-dsl_3</artifactId>
+            <version>${http4s.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-ember-server_3</artifactId>
+            <version>${http4s.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-server_3</artifactId>
+            <version>${http4s.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- Tapir                                                       -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>com.softwaremill.sttp.tapir</groupId>
+            <artifactId>tapir-core_3</artifactId>
+            <version>${tapir.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.softwaremill.sttp.tapir</groupId>
+            <artifactId>tapir-http4s-server_3</artifactId>
+            <version>${tapir.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.softwaremill.sttp.tapir</groupId>
+            <artifactId>tapir-openapi-docs_3</artifactId>
+            <version>${tapir.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.softwaremill.sttp.tapir</groupId>
+            <artifactId>tapir-swagger-ui-bundle_3</artifactId>
+            <version>${tapir.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- Circe                                                       -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>io.circe</groupId>
+            <artifactId>circe-core_3</artifactId>
+            <version>${circe.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.circe</groupId>
+            <artifactId>circe-generic_3</artifactId>
+            <version>${circe.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.circe</groupId>
+            <artifactId>circe-parser_3</artifactId>
+            <version>${circe.version}</version>
+        </dependency>
+
+
+        <!-- ========================================================= -->
+        <!-- Tests                                                       -->
+        <!-- ========================================================= -->
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_3</artifactId>
+            <version>${scalatest.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>munit-cats-effect_3</artifactId>
+            <version>${munit-cats-effect.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.typelevel</groupId>
+            <artifactId>cats-effect-testkit_3</artifactId>
+            <version>${cats-effect.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-ember-client_3</artifactId>
+            <version>${http4s.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+    <!-- ============================================================= -->
+    <!-- Build                                                         -->
+    <!-- ============================================================= -->
+
     <build>
-        <finalName>hello-server</finalName>
+
         <plugins>
+
+            <!-- ===================================================== -->
+            <!-- Scala 3 Maven Plugin                                  -->
+            <!-- ===================================================== -->
+
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${scala-maven-plugin.version}</version>
+
+                <configuration>
+
+                    <scalaVersion>${scala.version}</scalaVersion>
+
+                    <args>
+                        <arg>-deprecation</arg>
+                        <arg>-feature</arg>
+                        <arg>-unchecked</arg>
+                    </args>
+
+                </configuration>
+
+                <executions>
+
+                    <execution>
+                        <id>scala-compile</id>
+
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+
+                    </execution>
+
+                    <execution>
+                        <id>scala-test-compile</id>
+
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+
+            <!-- ===================================================== -->
+            <!-- Java 17 compiler                                      -->
+            <!-- ===================================================== -->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.myway.httpserver.main.Main</mainClass>
-                        </manifest>
-                    </archive>
+                    <release>${maven.compiler.release}</release>
                 </configuration>
+
             </plugin>
+
+
+            <!-- ===================================================== -->
+            <!-- Spotless / Scalafmt                                   -->
+            <!-- ===================================================== -->
+
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+
+                <configuration>
+
+                    <scala>
+
+                        <includes>
+                            <include>src/**/*.scala</include>
+                        </includes>
+
+                        <scalafmt>
+                            <version>3.8.2</version>
+                            <file>
+                                ${project.basedir}/.scalafmt.conf
+                            </file>
+                        </scalafmt>
+
+                    </scala>
+
+                </configuration>
+
+                <executions>
+
+                    <execution>
+                        <id>spotless-apply</id>
+                        <phase>verify</phase>
+
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+
+            <!-- ===================================================== -->
+            <!-- ScalaTest                                              -->
+            <!-- ===================================================== -->
+
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>${scalatest-maven-plugin.version}</version>
+
+                <configuration>
+
+                    <reportsDirectory>
+                        ${project.build.directory}/surefire-reports
+                    </reportsDirectory>
+
+                    <junitxml>.</junitxml>
+
+                </configuration>
+
+                <executions>
+
+                    <execution>
+                        <id>scalatest-test</id>
+                        <phase>test</phase>
+
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+
+            <!-- ===================================================== -->
+            <!-- Executable FAT JAR                                    -->
+            <!-- ===================================================== -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade-plugin.version}</version>
+
+                <executions>
+
+                    <execution>
+                        <id>shade</id>
+
+                        <phase>package</phase>
+
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+
+                            <finalName>
+                                ${project.artifactId}
+                            </finalName>
+
+                            <transformers>
+
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+
+                                    <mainClass>
+                                        com.myway.gvolpe.eventdriven.sandbox.hello.IoHelloApp
+                                    </mainClass>
+
+                                </transformer>
+
+                            </transformers>
+
+                        </configuration>
+
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
         </plugins>
+
     </build>
+
 </project>
