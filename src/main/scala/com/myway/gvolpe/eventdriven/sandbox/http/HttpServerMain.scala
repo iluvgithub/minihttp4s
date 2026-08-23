@@ -1,8 +1,8 @@
 package com.myway.gvolpe.eventdriven.sandbox.http
 
+import cats.Monad
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.implicits.*
-import cats.{Monad, MonadError}
 import com.comcast.ip4s.*
 import org.http4s.HttpRoutes
 import org.http4s.ember.server.EmberServerBuilder
@@ -25,7 +25,7 @@ object HttpServerMain extends IOApp:
       IO.pure(s"<html><body><h1> simple page </h1></body></html>")
     })
 
-  val swaggerRoutes =
+  private val swaggerRoutes: HttpRoutes[IO] =
     Http4sServerInterpreter[IO]().toRoutes(
       SwaggerInterpreter().fromEndpoints[IO](
         simpleEndpoint :: SandboxRoutes[IO]().endPoints,
@@ -37,7 +37,7 @@ object HttpServerMain extends IOApp:
   override def run(args: List[String]): IO[ExitCode] =
     for
       portAsString <- getPort(args)
-      _            <- IO.println(s"Open server on port:${portAsString}")
+      _            <- IO.println(s"Open server on port:$portAsString")
       server = EmberServerBuilder
         .default[IO]
         .withHost(host"0.0.0.0")
@@ -50,7 +50,7 @@ object HttpServerMain extends IOApp:
           ).orNotFound
         )
         .build
-      _ <- IO.println(s"Ready server on port:${portAsString}")
+      _ <- IO.println(s"Ready server on port:$portAsString")
       _ <- server.useForever
     yield ExitCode.Success
 
