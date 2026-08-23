@@ -14,21 +14,35 @@ import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 object HttpServerMain extends IOApp:
 
+  private val simpleEndpoint0: Endpoint[Unit, Unit, Unit, String, Any] =
+    makeSimpleEndpoint("")
   private val simpleEndpoint: Endpoint[Unit, Unit, Unit, String, Any] =
+    makeSimpleEndpoint("simple")
+
+  private def makeSimpleEndpoint(pageName:String): Endpoint[Unit, Unit, Unit, String, Any] =
     endpoint.get
-      .in("simple")
+      .in(pageName)
       .out(htmlBodyUtf8)
       .description("Returns a simple page")
 
-  private val simpleRoute: HttpRoutes[IO] =
-    Http4sServerInterpreter[IO]().toRoutes(simpleEndpoint.serverLogicSuccess[IO] { name =>
-      IO.pure(s"<html><body><h1> simple page </h1></body></html>")
+  private final val HTTP_SIMPLE           = s"<html><body><h1> simple page </h1></body></html>"
+  private val simpleRoute: HttpRoutes[IO] = make(simpleEndpoint, HTTP_SIMPLE)
+
+  private final val HTTP_SIMPLE           = s"<html><body><h1>Go to /docs to see swagger</h1></body></html>"
+  private val simpleRoute0: HttpRoutes[IO] = make(simpleEndpoint0, HTTP_SIMPLE)
+
+  def make(
+    endPoint: Endpoint[Unit, Unit, Unit, String, Any],
+    httpContents: String
+  ): HttpRoutes[IO] =
+    Http4sServerInterpreter[IO]().toRoutes(endPoint.serverLogicSuccess[IO] { name =>
+      IO.pure(httpContents)
     })
 
   private val swaggerRoutes: HttpRoutes[IO] =
     Http4sServerInterpreter[IO]().toRoutes(
       SwaggerInterpreter().fromEndpoints[IO](
-        simpleEndpoint :: SandboxRoutes[IO]().endPoints,
+        simpleEndpoint0 :: simpleEndpoint :: SandboxRoutes[IO]().endPoints,
         "Mini API",
         "1.0"
       )
@@ -44,6 +58,7 @@ object HttpServerMain extends IOApp:
         .withPort(portAsString)
         .withHttpApp(
           Router(
+            "/" -> simpleRoute0,
             "/" -> simpleRoute,
             "/" -> SandboxRoutes[IO]().routes,
             "/" -> swaggerRoutes
