@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        int port = 8081;
+        int port = 8080;
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         }
