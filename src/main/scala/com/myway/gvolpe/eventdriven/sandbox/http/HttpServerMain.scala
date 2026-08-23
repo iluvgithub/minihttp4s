@@ -28,8 +28,8 @@ object HttpServerMain extends IOApp:
   private final val HTTP_SIMPLE           = s"<html><body><h1> simple page </h1></body></html>"
   private val simpleRoute: HttpRoutes[IO] = make(simpleEndpoint, HTTP_SIMPLE)
 
-  private final val HTTP_SIMPLE           = s"<html><body><h1>Go to /docs to see swagger</h1></body></html>"
-  private val simpleRoute0: HttpRoutes[IO] = make(simpleEndpoint0, HTTP_SIMPLE)
+  private final val HTTP_SIMPLE0           = s"<html><body><h1>Go to /docs to see swagger</h1></body></html>"
+  private val simpleRoute0: HttpRoutes[IO] = make(simpleEndpoint0, HTTP_SIMPLE0)
 
   def make(
     endPoint: Endpoint[Unit, Unit, Unit, String, Any],
