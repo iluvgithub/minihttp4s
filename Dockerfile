@@ -8,6 +8,8 @@ RUN mvn -B package -DskipTests
 # --- Run stage ---
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/hello-server.jar app.jar
+COPY --from=build /app/target/sandbox-http4s.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
